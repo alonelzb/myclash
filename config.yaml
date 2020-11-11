@@ -1,0 +1,47 @@
+mixed-port: 10808
+allow-lan: true
+mode: Rule
+log-level: info
+external-controller: 127.0.0.1:9090
+
+# authentication:
+#  - "admin:admin"
+#  - "user2:pass2"
+
+dns:
+  enable: true
+  listen: 53
+  nameserver:
+    - 223.5.5.5
+
+proxy-groups:
+  - name: auto
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    use:
+      - popo
+      
+proxy-providers:
+  popo:
+    type: file
+    path: ./provider.yaml
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 600
+
+rule-providers:
+  myrule:
+    type: file
+    behavior: classical
+    path: ./myrule.yaml
+  adblock:
+    type: file
+    behavior: classical
+    path: ./adblock.yaml
+rules:
+ - RULE-SET,myrule,auto
+ - RULE-SET,adblock,REJECT
+ - GEOIP,CN,DIRECT
+ - MATCH,auto
