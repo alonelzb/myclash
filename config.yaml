@@ -14,9 +14,6 @@ dns:
   nameserver:
     - 223.5.5.5
 
-proxies:
-  - { name: "1.0x JP-BGP-C 日本",type: vmess,server: 36f235.cn.static.ipv4.oreoapi.com,port: 80,uuid: FB7466A3-AE1E-9569-5522-D5250DAC9B4D,alterId: 1,cipher: auto, network: ws, ws-headers: { Host: itunes.apple.com.ajax.microsoft.com.cn.bing.com.jp.smxhx.com }}
-
 proxy-groups:
   - name: auto
     type: url-test
