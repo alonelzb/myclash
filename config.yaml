@@ -14,6 +14,9 @@ dns:
   nameserver:
     - 223.5.5.5
 
+proxies:
+  - { name: "1.0x JP-BGP-C 日本",type: vmess,server: 36f235.cn.static.ipv4.oreoapi.com,port: 80,uuid: FB7466A3-AE1E-9569-5522-D5250DAC9B4D,alterId: 1,cipher: auto, network: ws, ws-headers: { Host: itunes.apple.com.ajax.microsoft.com.cn.bing.com.jp.smxhx.com }}
+
 proxy-groups:
   - name: auto
     type: url-test
@@ -21,27 +24,41 @@ proxy-groups:
     interval: 600
     use:
       - popo
+      - qianglie
+    proxies:
+      - "1.0x JP-BGP-C 日本"
       
 proxy-providers:
   popo:
     type: file
-    path: ./provider.yaml
+    path: ./providers/popo.yaml
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 600
+  qianglie:
+    type: file
+    path: ./providers/qianglie.yaml
     health-check:
       enable: true
       url: http://www.gstatic.com/generate_204
       interval: 600
 
 rule-providers:
-  myrule:
+  proxy:
     type: file
     behavior: classical
-    path: ./myrule.yaml
+    path: ./ruleset/proxy.yaml
+  direct:
+    type: file
+    behavior: classical
+    path: ./ruleset/direct.yaml
   adblock:
     type: file
     behavior: classical
-    path: ./adblock.yaml
+    path: ./ruleset/adblock.yaml
 rules:
- - RULE-SET,myrule,auto
+ - RULE-SET,direct,DIRECT
  - RULE-SET,adblock,REJECT
  - GEOIP,CN,DIRECT
  - MATCH,auto
